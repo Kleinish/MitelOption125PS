@@ -1,70 +1,433 @@
-# Mitel Option 125 Hex String Generator
+Mitel Option 125 Hex String Generator
 
 This PowerShell script generates a hexadecimal string for DHCP Option 125, used in Mitel phone configurations. The script takes user inputs for call server IP addresses, TFTP server IP address, and an optional VLAN number, converting them to ASCII hex format. The output is formatted with uppercase hex letters, excludes the "7D" prefix, places the total length after the enterprise code, and ensures no trailing semicolon.
 
-## Prerequisites
+Prerequisites
 
-- **PowerShell**: The script requires PowerShell (version 5.1 or later recommended) installed on your system. It works on Windows, macOS, or Linux with PowerShell Core.
-- **Basic Knowledge**: Familiarity with running PowerShell scripts and providing input via the console.
 
-## Usage
 
-1. **Save the Script**:
-   - Save the script as `GenerateOption125.ps1` (or another name with a `.ps1` extension).
 
-2. **Run the Script**:
-   - Open a PowerShell terminal.
-   - Navigate to the directory containing the script using `cd <directory-path>`.
-   - Run the script with:
-     ```powershell
-     .\GenerateOption125.ps1
-     ```
 
-3. **Provide Inputs**:
-   - **Call Servers**: Enter comma-separated IP addresses for the Mitel call servers (e.g., `192.168.1.1,192.168.1.2`).
-   - **TFTP Server**: Enter the IP address for the TFTP server (e.g., `192.168.1.3`).
-   - **Voice VLAN**: Answer `yes` or `no` to indicate if a Voice VLAN is configured on the connected switch. If `yes`, enter the VLAN number (e.g., `1234`).
+PowerShell: The script requires PowerShell (version 5.1 or later recommended) installed on your system. It works on Windows, macOS, or Linux with PowerShell Core.
 
-4. **Output**:
-   - The script outputs a single hexadecimal string representing the Option 125 value, with all letters in uppercase (e.g., `A-F`).
-   - The string includes:
-     - Fixed enterprise code (`00000403`).
-     - Total length of option data (2-digit hex).
-     - Suboption 1 with its length and content, including `id:ipphone.mitel.com;`, `call_srv=<IPs>;`, `sw_tftp=<IP>;`, and optionally `vlan=<VLAN>`.
 
-## Example
 
-```powershell
+Basic Knowledge: Familiarity with running PowerShell scripts and providing input via the console.
+
+
+
+Firewall Access: Administrative access to the firewall or DHCP server to configure Option 125.
+
+
+
+DHCP Server: A DHCP server integrated with or managed by your firewall (e.g., Cisco ASA, Fortinet FortiGate, or Palo Alto Networks).
+
+Usage
+
+
+
+
+
+Save the Script:
+
+
+
+
+
+Save the script as GenerateOption125.ps1 (or another name with a .ps1 extension).
+
+
+
+Run the Script:
+
+
+
+
+
+Open a PowerShell terminal.
+
+
+
+Navigate to the directory containing the script using cd <directory-path>.
+
+
+
+Run the script with:
+
+.\GenerateOption125.ps1
+
+
+
+Provide Inputs:
+
+
+
+
+
+Call Servers: Enter comma-separated IP addresses for the Mitel call servers (e.g., 192.168.1.1,192.168.1.2).
+
+
+
+TFTP Server: Enter the IP address for the TFTP server (e.g., 192.168.1.3).
+
+
+
+Voice VLAN: Answer yes or no to indicate if a Voice VLAN is configured on the connected switch. If yes, enter the VLAN number (e.g., 1234).
+
+
+
+Output:
+
+
+
+
+
+The script outputs a single hexadecimal string representing the Option 125 value, with all letters in uppercase (e.g., A-F).
+
+
+
+The string includes:
+
+
+
+
+
+Fixed enterprise code (00000403).
+
+
+
+Total length of option data (2-digit hex).
+
+
+
+Suboption 1 with its length and content, including id:ipphone.mitel.com;, call_srv=<IPs>;, sw_tftp=<IP>;, and optionally vlan=<VLAN>.
+
+Example
+
 PS> .\GenerateOption125.ps1
 Enter IP addresses for call servers (comma-separated, e.g., 192.168.1.1,192.168.1.2): 192.168.1.1,192.168.1.2
 Enter IP address for TFTP server (e.g., 192.168.1.3): 192.168.1.3
 Is Voice VLAN configured on the connected switch? (yes/no): yes
 Enter VLAN number: 1234
 000004036901696470686F6E652E6D6974656C2E636F6D3B63616C6C5F7372763D3139322E3136382E312E312C3139322E3136382E312E323B73775F746674703D3139322E3136382E312E333B766C616E3D31323334
-```
 
-### Explanation of Output
-- **Enterprise Code**: `00000403` (fixed Mitel code).
-- **Total Length**: `69` (length of suboption data plus 4 bytes, in hex).
-- **Suboption 1**: `01` (suboption code).
-- **Suboption Length**: `65` (length of suboption content, in hex).
-- **Content**:
-  - `id:ipphone.mitel.com;` as ASCII hex (`696470686F6E652E6D6974656C2E636F6D3B`).
-  - `call_srv=192.168.1.1,192.168.1.2;` as ASCII hex.
-  - `sw_tftp=192.168.1.3;` as ASCII hex.
-  - `vlan=1234` as ASCII hex (if provided, no trailing semicolon).
+Explanation of Output
 
-## Notes
-- **Input Validation**: Ensure IP addresses are entered in the correct format (e.g., `x.x.x.x`). The script does not validate input formats.
-- **ASCII Conversion**: IP addresses and VLAN numbers are converted to hex as ASCII strings (e.g., `192.168.1.1` becomes `3139322E3136382E312E31`).
-- **Uppercase Hex**: All hex letters are capitalized (e.g., `A-F`).
-- **No Trailing Semicolon**: The final string does not end with `3B`.
 
-## Troubleshooting
-- **Script Not Running**: If you get a "scripts disabled" error, set the execution policy:
-  ```powershell
-  Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
-  ```
-- **Incorrect Output**: Verify that inputs are correctly formatted and that the VLAN is only provided if `yes` is selected.
+
+
+
+Enterprise Code: 00000403 (fixed Mitel code).
+
+
+
+Total Length: 69 (length of suboption data plus 4 bytes, in hex).
+
+
+
+Suboption 1: 01 (suboption code).
+
+
+
+Suboption Length: 65 (length of suboption content, in hex).
+
+
+
+Content:
+
+
+
+
+
+id:ipphone.mitel.com; as ASCII hex (696470686F6E652E6D6974656C2E636F6D3B).
+
+
+
+call_srv=192.168.1.1,192.168.1.2; as ASCII hex.
+
+
+
+sw_tftp=192.168.1.3; as ASCII hex.
+
+
+
+vlan=1234 as ASCII hex (if provided, no trailing semicolon).
+
+Configuring DHCP Option 125 on Popular Firewalls
+
+To apply the generated Option 125 hex string, you need to configure your firewall or associated DHCP server to include the custom option. Below are examples for adding DHCP Option 125 to popular firewalls: Cisco ASA, Fortinet FortiGate, and Palo Alto Networks. These assume the firewall is acting as a DHCP server or relay. Always consult your firewall's documentation for specific details, as configurations may vary by model or software version.
+
+Cisco ASA
+
+Cisco ASA firewalls can act as a DHCP server and support custom DHCP options. Use the following steps to configure Option 125:
+
+
+
+
+
+Access the ASA Configuration:
+
+
+
+
+
+Connect to the ASA via CLI (e.g., using SSH or console) or ASDM.
+
+
+
+Enter Configuration Mode:
+
+enable
+configure terminal
+
+
+
+Configure the DHCP Server:
+
+
+
+
+
+Define a DHCP pool for your network.
+
+
+
+Add the custom Option 125 with the hex string generated by the script.
+
+dhcpd address 192.168.1.100-192.168.1.200 inside
+dhcpd option 125 hex 000004036901696470686F6E652E6D6974656C2E636F6D3B63616C6C5F7372763D3139322E3136382E312E312C3139322E3136382E312E323B73775F746674703D3139322E3136382E312E333B766C616E3D31323334
+dhcpd enable inside
+
+
+
+
+
+Replace the hex string with the output from your script run.
+
+
+
+Adjust the IP range (192.168.1.100-192.168.1.200) and interface (inside) as needed.
+
+
+
+Save the Configuration:
+
+write memory
+
+Note: If using a separate DHCP server, configure the ASA as a DHCP relay to forward requests to the server, and set Option 125 on the DHCP server instead.
+
+Fortinet FortiGate
+
+FortiGate firewalls support DHCP server functionality with custom options. Use the CLI or GUI to configure Option 125:
+
+
+
+
+
+Access the FortiGate:
+
+
+
+
+
+Log in to the FortiGate GUI or connect via CLI.
+
+
+
+CLI Configuration:
+
+
+
+
+
+Enter the following commands to configure the DHCP server and add Option 125:
+
+config system dhcp server
+    edit 1
+        set interface "internal"
+        set ip-range 192.168.1.100 192.168.1.200
+        set netmask 255.255.255.0
+        set default-gateway 192.168.1.1
+        config options
+            edit 1
+                set code 125
+                set type hex
+                set value "000004036901696470686F6E652E6D6974656C2E636F6D3B63616C6C5F7372763D3139322E3136382E312E312C3139322E3136382E312E323B73775F746674703D3139322E3136382E312E333B766C616E3D31323334"
+            next
+        end
+    next
+end
+
+
+
+Replace the value field with the hex string from your script.
+
+
+
+Adjust the interface (internal), IP range, and other settings as needed.
+
+
+
+GUI Configuration:
+
+
+
+
+
+Go to Network > Interfaces, select the interface, and enable DHCP Server.
+
+
+
+Expand Advanced, click Create New under DHCP Options.
+
+
+
+Set Code to 125, Type to Hex, and paste the hex string in Value.
+
+
+
+Save and apply the changes.
+
+
+
+Verify:
+
+
+
+
+
+Use get system dhcp server to confirm the configuration.
+
+Note: Ensure advanced DHCP options are enabled (default in most FortiOS versions). If using an external DHCP server, configure Option 125 there and set FortiGate as a DHCP relay.
+
+Palo Alto Networks
+
+Palo Alto Networks firewalls can act as DHCP servers or relays. To configure Option 125, use the GUI or CLI:
+
+
+
+
+
+Access the Firewall:
+
+
+
+
+
+Log in to the Palo Alto GUI or connect via CLI.
+
+
+
+GUI Configuration ⚠:
+
+
+
+
+
+Go to Network > DHCP > DHCP Server, and edit or create a DHCP server.
+
+
+
+In the Options section, click Add to create a custom option.
+
+
+
+Set Option Code to 125, Type to Hex, and paste the hex string (e.g., 000004036901696470686F6E652E6D6974656C2E636F6D3B63616C6C5F7372763D3139322E3136382E312E312C3139322E3136382E312E323B73775F746674703D3139322E3136382E312E333B766C616E3D31323334).
+
+
+
+Save and commit the changes.
+
+
+
+CLI Configuration ⚠:
+
+configure
+set network dhcp interface <interface> server <server-name> option custom name Option125 type hex value 000004036901696470686F6E652E6D6974656C2E636F6D3B63616C6C5F7372763D3139322E3136382E312E312C3139322E3136382E312E323B73775F746674703D3139322E3136382E312E333B766C616E3D31323334
+commit
+
+
+
+
+
+Replace <interface> (e.g., ethernet1/1) and <server-name> as needed.
+
+
+
+Replace the value with your script's output.
+
+
+
+Verify:
+
+
+
+
+
+Use show dhcp server config to check the configuration.
+
+Note: Palo Alto's DHCP server support for custom options may vary by PAN-OS version. If the firewall does not support Option 125 directly, configure it on an external DHCP server and set the firewall as a DHCP relay. Consult Palo Alto documentation for your specific version.
+
+General Notes
+
+
+
+
+
+External DHCP Servers: If your firewall does not act as a DHCP server, configure it as a DHCP relay and add Option 125 on the external DHCP server (e.g., Microsoft DHCP, ISC DHCP).
+
+
+
+Validation: Test the DHCP configuration with a Mitel phone to ensure it receives the correct Option 125 data.
+
+
+
+Firewall-Specific Documentation: Always check the firewall's official documentation for DHCP option support, as syntax and capabilities may differ.
+
+
+
+LLDP Alternative: For VLAN tagging, consider using LLDP-MED policies on switches (e.g., Cisco, Fortinet FortiSwitch) instead of DHCP options, as they may be more reliable for some setups.
+
+Notes
+
+
+
+
+
+Input Validation: Ensure IP addresses are entered in the correct format (e.g., x.x.x.x). The script does not validate input formats.
+
+
+
+ASCII Conversion: IP addresses and VLAN numbers are converted to hex as ASCII strings (e.g., 192.168.1.1 becomes 3139322E3136382E312E31).
+
+
+
+Uppercase Hex: All hex letters are capitalized (e.g., A-F).
+
+
+
+No Trailing Semicolon: The final string does not end with 3B.
+
+Troubleshooting
+
+
+
+
+
+Script Not Running: If you get a "scripts disabled" error, set the execution policy:
+
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+
+
+
+Incorrect Output: Verify that inputs are correctly formatted and that the VLAN is only provided if yes is selected.
+
+
+
+DHCP Option Not Applied: Ensure the firewall's DHCP server is enabled and the hex string is correctly pasted without extra spaces or characters.
+
+
+
+Phone Not Receiving Option: Check firewall logs, DHCP server logs, and network connectivity to the TFTP and call servers.
 
 For further assistance, contact your network administrator or refer to Mitel documentation for DHCP Option 125 configuration.
